@@ -74,7 +74,7 @@
     }
   };
 
-  document.getElementById("OK").onclick = function() {
+  $("#OK").on('click', function() {
     $.post({
       url: "api/calcul.php",
       data: {
@@ -86,6 +86,6 @@
         $("#result").html(result);
       }
     });
-  };
+  });
 
 })();
