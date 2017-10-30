@@ -21,3 +21,9 @@ body {
     font-size: 1em;
     font-weight: bold;
 }
+
+#result {
+    background-color: lightgrey;
+    font-family: Courier New, Courier, monospace;
+    margin-top: 15px;
+}

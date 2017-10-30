@@ -1,91 +1,93 @@
 ;(function() {
 
-  "use strict";
+  'use strict';
 
-  //Calcul des solutions
+  function get(id) {
+    return $('#' + id);
+  }
+
+  function set(id, value) {
+    get(id).val(value);
+  }
+
+  function getVal(id) {
+    return get(id).val();
+  }
+
+  function getFloat(id) {
+    return parseFloat(getVal(id), 10);
+  }
+
+  function setSolution(text, s1, s2) {
+    let result = "&nbsp;" + text + '<br/>';
+    if (s1) result += s1 + '<br />';
+    if (s2) result += s2 + '<br/>';
+    get('result').html(result);
+  }
+
+  // Calcul des solutions
   function calcul() {
-    let a = parseFloat(document.getElementById("a").value, 10);
-    let b = parseFloat(document.getElementById("b").value, 10);
-    let c = parseFloat(document.getElementById("c").value, 10);
+    let a = getFloat('a');
+    let b = getFloat('b');
+    let c = getFloat('c');
 
     if (isNaN(b)) {
       b = 0;
-      document.getElementById("b").value = b;
+      set('b', b);
     }
     if (isNaN(c)) {
       c = 0;
-      document.getElementById("c").value = c;
+      set('c', c);
     }
 
-    let delta = b * b - 4.0 * a * c;
+    const delta = b * b - 4.0 * a * c;
     if (a === 0 || isNaN(a)) {
-      document.getElementById("Solutions").value = "Le paramètre a doit être renseigné et non nul";
-      document.getElementById("Solutions").type = "text";
-      document.getElementById("a").focus();
-      document.getElementById("s1").value = "";
-      document.getElementById("s1").type = "hidden";
-      document.getElementById("s2").value = "";
-      document.getElementById("s2").type = "hidden";
+      setSolution('Le paramètre a doit être renseigné et non null');
+      get('a').focus();
     }
     else {
-      let p = new Polynomial();
-      p.addMember(a, "x²");
-      p.addMember(b, "x");
-      p.addMember(c, "");
+      const p = new Polynomial();
+      p.addMember(a, 'x²');
+      p.addMember(b, 'x');
+      p.addMember(c, '');
       if (delta < 0) {
-        document.getElementById("Solutions").value = "L'équation " + p.getPolynomial() + " = 0 admet deux solutions dans C : ";
-        document.getElementById("Solutions").type = "text";
-        document.getElementById("s1").value = "z1 = (" + -b + "-i√" + -delta + ") / " + 2 * a;
-        document.getElementById("s1").type = "text";
-        document.getElementById("s2").value = "z2 = (" + -b + "+i√" + -delta + ") / " + 2 * a;
-        document.getElementById("s2").type = "text";
+        setSolution(
+          'L\'équation ' + p.getPolynomial() + ' = 0 admet deux solutions dans C:',
+          'z1 = (' + -b + '-i√' + -delta + ') / ' + (2 * a),
+          'z2 = (' + -b + '+i√' + -delta + ') / ' + (2 * a)
+        );
       }
       else {
         if (delta === 0) {
-          let x = -b/(2.0*a);
-          document.getElementById("Solutions").value = "L'équation " + p.getPolynomial() + " = 0 admet une solution dans R : ";
-          document.getElementById("Solutions").type = "text";
-          document.getElementById("s1").value = "x = " + -b + " / " + 2 * a + " = " + x;
-          document.getElementById("s1").type = "text";
-          document.getElementById("s2").value = "";
-          document.getElementById("s2").type = "hidden";
+          const x = -b/(2.0*a);
+          setSolution(
+            'L\'équation ' + p.getPolynomial() + ' = 0 admet une solution dans R:',
+            'x = ' + -b + ' / ' + (2 * a) + ' = ' + x
+          );
         }
         else {
           let x1 = (-b - Math.sqrt(delta)) / (2.0 * a);
           let x2 = (-b + Math.sqrt(delta)) / (2.0 * a);
-          document.getElementById("Solutions").value = "L'équation " + p.getPolynomial() + " = 0 admet deux solutions dans R : ";
-          document.getElementById("Solutions").type = "text";
-          document.getElementById("s1").value = "x1 = (" + -b + "-√" + delta + ") / " + 2 * a + " = " + x1;
-          document.getElementById("s1").type = "text";
-          document.getElementById("s2").value = "x2 = (" + -b + "+√" + delta + ") / " + 2 * a + " = " + x2;
-          document.getElementById("s2").type = "text";
+          setSolution(
+            'L\'équation ' + p.getPolynomial() + ' = 0 admet deux solutions dans R:',
+            'x1 = (' + -b + '-√' + delta + ') / ' + (2 * a) + ' = ' + x1,
+            'x2 = (' + -b + '+√' + delta + ') / ' + (2 * a) + ' = ' + x2
+          );
         }
       }
     }
   }
 
   window.onload = function () {
-    document.getElementById("a").focus();
+    get('a').focus();
   };
 
   document.onkeypress = function (e) {
     if (e.keyCode === 13) { //enter
-      document.getElementById("OK").focus();
+      get('OK').focus();
     }
   };
 
-  $("#OK").on('click', function() {
-    $.post({
-      url: "api/calcul.php",
-      data: {
-        a: $('#a').val(),
-        b: $('#b').val(),
-        c: $('#c').val()
-      },
-      success: function(result) {
-        $("#result").html(result);
-      }
-    });
-  });
+  get('OK').on('click', calcul);
 
 })();
