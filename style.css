@@ -1,0 +1,18 @@
+body {
+    background-color: #F0F0F0;
+}
+
+* {
+    color: black;
+}
+
+.help {
+    color: darkblue;
+    font-size: 1em;
+}
+
+#Ok {
+    color: black;
+    font-size: 1em;
+    font-weight: bold;
+}
