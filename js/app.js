@@ -74,6 +74,18 @@
     }
   };
 
-  document.getElementById("OK").onclick = calcul;
+  document.getElementById("OK").onclick = function() {
+    $.post({
+      url: "api/calcul.php",
+      data: {
+        a: $('#a').val(),
+        b: $('#b').val(),
+        c: $('#c').val()
+      },
+      success: function(result) {
+        $("#result").html(result);
+      }
+    });
+  };
 
 })();
